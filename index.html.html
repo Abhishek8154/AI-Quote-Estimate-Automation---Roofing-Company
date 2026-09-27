@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shree Roofing Solutions — Estimate Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #123028; --surface: #FBFAF4; --ink: #1E2A2E; --ink-soft: #57636B; --ink-faint: #8B948F;
+    --line: #D9D2BE; --accent: #204E44; --accent-bright: #5FC49E; --heading: #F2ECDC; --accent-soft: #E3ECE7; --copper: #B4633A; --copper-bright: #E0956B; --copper-soft: #F3E3D8; --danger: #B4483F;
+    padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root[data-theme="dark"] {
+    --bg: #14181A; --surface: #1D2225; --ink: #E9EEE9; --ink-soft: #9DA6A2; --ink-faint: #656E6A;
+    --line: #303634; --accent: #6BAF9B; --accent-soft: #1E2B27; --copper: #D68B5C; --copper-soft: #2C231B; --danger: #C4695C;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; color: var(--ink); font-family: 'Source Sans 3', system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+    background:
+      radial-gradient(ellipse 900px 520px at 85% -15%, rgba(224,149,112,0.12), transparent 55%),
+      radial-gradient(ellipse 700px 500px at 5% 100%, rgba(95,196,158,0.10), transparent 55%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 52px 28px 90px; }
+
+  header.masthead {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap;
+    padding-bottom: 24px; margin-bottom: 6px; border-bottom: 2px solid var(--accent-bright);
+  }
+  .brand-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--copper-bright); margin-bottom: 12px; }
+  .masthead h1 { font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: clamp(28px, 4vw, 40px); margin: 0; line-height: 1.05; color: var(--heading); }
+  .status-block { text-align: right; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .status { display: flex; align-items: center; gap: 9px; font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: rgba(242,236,220,0.6); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-bright); box-shadow: 0 0 0 0 rgba(95,196,158,0.4); animation: pulseDot 2.4s ease-out infinite; }
+  .dot.error { background: var(--danger); animation: none; box-shadow: none; }
+  @keyframes pulseDot { 0% { box-shadow: 0 0 0 0 rgba(95,196,158,0.35); } 70% { box-shadow: 0 0 0 7px rgba(95,196,158,0); } 100% { box-shadow: 0 0 0 0 rgba(95,196,158,0); } }
+  button.refresh { border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft); font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 12.5px; padding: 7px 14px; border-radius: 3px; cursor: pointer; transition: all .15s ease; }
+  button.refresh:hover { border-color: var(--copper); color: var(--copper); }
+  button.refresh:focus-visible { outline: 1px solid var(--accent-bright); outline-offset: 3px; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 36px 0 34px; }
+  .stat {
+    padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--stat-accent, var(--accent)); border-radius: 3px;
+    transition: transform .18s ease, box-shadow .18s ease; cursor: pointer;
+  }
+  .stat:hover { transform: translateY(-2px); box-shadow: 0 10px 26px -16px rgba(30,42,46,0.35); }
+  .stat.active { background: var(--stat-soft, var(--accent-soft)); }
+  .stat.active .num { color: var(--stat-accent, var(--accent)); }
+  .stat .label { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+  .stat .num { font-family: 'Libre Caslon Display', Georgia, serif; font-size: 32px; line-height: 1; color: var(--ink); }
+
+  .chart-block { margin: 0 0 36px; padding: 20px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; }
+  .chart-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-faint); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 12px; height: 54px; }
+  .chart-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 9px; height: 100%; justify-content: flex-end; }
+  .chart-bar { width: 100%; max-width: 32px; background: var(--accent); opacity: .55; border-radius: 1px; min-height: 2px; transition: opacity .15s; }
+  .chart-bar-col:hover .chart-bar { opacity: 1; }
+  .chart-count { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-faint); }
+  .chart-day { font-size: 10.5px; color: var(--ink-faint); }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 18px; flex-wrap: wrap; }
+  .section-title { font-family: 'Libre Caslon Display', Georgia, serif; font-size: 19px; margin: 0; color: var(--heading); }
+  .search-inline {
+    background: var(--surface); border: 1px solid var(--line); color: var(--ink);
+    font-family: 'Source Sans 3', sans-serif; font-size: 13px; padding: 8px 14px; border-radius: 3px;
+    outline: none; transition: border-color .15s ease, width .15s ease; width: 210px; max-width: 100%;
+  }
+  .search-inline::placeholder { color: var(--ink-faint); }
+  .search-inline:focus { border-color: var(--copper); width: 250px; }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-bottom: 36px; }
+  .quote-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 0; cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease; animation: fadeIn .4s ease both; overflow: hidden;
+  }
+  .quote-card:hover { transform: translateY(-2px); box-shadow: 0 12px 30px -16px rgba(30,42,46,0.35); }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .card-head { padding: 15px 18px 13px; border-bottom: 1px dashed var(--line); }
+  .card-date { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ink-faint); margin-bottom: 7px; }
+  .card-name { font-weight: 600; font-size: 15.5px; color: var(--ink); }
+  .card-body { padding: 14px 18px 16px; }
+  .card-sub { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-faint); margin-bottom: 10px; }
+  .card-snip { font-size: 13px; color: var(--ink-soft); line-height: 1.55; -webkit-line-clamp: 3; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 10px; min-height: 20px; }
+  .card-tap { font-size: 11.5px; color: var(--copper); font-weight: 600; }
+
+  .empty { padding: 50px 30px; text-align: center; color: var(--ink-faint); font-size: 14.5px; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; }
+  .empty svg { margin-bottom: 14px; opacity: .4; }
+  .empty strong { display: block; margin-bottom: 6px; color: var(--ink-soft); font-weight: 600; font-family: 'Libre Caslon Display', serif; font-size: 18px; }
+  .error-box { background: var(--surface); border-left: 3px solid var(--danger); padding: 18px 20px; font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; border-radius: 3px; }
+  .error-box strong { color: var(--ink); }
+
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(20,24,20,0.5); backdrop-filter: blur(2px);
+    display: flex; align-items: center; justify-content: center; z-index: 50; padding: 20px; animation: fadeIn .2s ease both;
+  }
+  .modal-box {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 4px; max-width: 480px; width: 100%;
+    max-height: 82vh; overflow-y: auto; padding: 0; box-shadow: 0 30px 70px -20px rgba(0,0,0,0.35);
+  }
+  .modal-head { padding: 22px 26px 16px; border-bottom: 1px dashed var(--line); display: flex; justify-content: space-between; align-items: flex-start; }
+  .modal-title { font-family: 'Libre Caslon Display', Georgia, serif; font-size: 21px; margin: 0 0 5px; color: var(--accent); }
+  .modal-meta { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-faint); }
+  .modal-close { background: none; border: 1px solid var(--line); color: var(--ink-faint); width: 26px; height: 26px; border-radius: 3px; cursor: pointer; font-size: 14px; line-height: 1; flex-shrink: 0; }
+  .modal-close:hover { border-color: var(--copper); color: var(--copper); }
+  .modal-body { padding: 20px 26px 26px; }
+  .modal-label { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); margin: 0 0 10px; }
+  .modal-text { font-size: 13.5px; color: var(--ink-soft); line-height: 1.65; white-space: pre-line; }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--copper); }
+  @media (max-width: 640px) { .stats { grid-template-columns: 1fr; row-gap: 12px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div>
+      <div class="brand-eyebrow">Shree Roofing Solutions</div>
+      <h1>The Estimate Desk</h1>
+    </div>
+    <div class="status-block">
+      <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Loading…</span></div>
+      <button class="refresh" id="refreshBtn">Refresh</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat active" data-filter="all" style="--stat-accent:#204E44; --stat-soft:#E3ECE7">
+      <div class="label">Quotes sent</div>
+      <div class="num" id="statTotal">–</div>
+    </div>
+    <div class="stat" data-filter="today" style="--stat-accent:#B4633A; --stat-soft:#F3E3D8">
+      <div class="label">Sent today</div>
+      <div class="num" id="statToday">–</div>
+    </div>
+    <div class="stat" data-filter="week" style="--stat-accent:#5C7A8A; --stat-soft:#E4EBEE">
+      <div class="label">Sent this week</div>
+      <div class="num" id="statWeek">–</div>
+    </div>
+  </div>
+
+  <div class="chart-block">
+    <div class="chart-label">Last 7 days</div>
+    <div class="chart-bars" id="chartBars"></div>
+  </div>
+
+  <div class="section-header">
+    <h2 class="section-title">Estimates on file</h2>
+    <input id="searchInput" type="text" class="search-inline" placeholder="Search by name…">
+  </div>
+  <section id="panel" class="card-grid"></section>
+
+</div>
+
+<script>
+// ---- CONFIGURE YOUR SHEET HERE ----
+const SHEET = { id: '16Ps9JNazdI6WmXJ_WXYTu2oGxyCCmT0jRlgI_iCakf8', tab: 'Sheet1' };
+const REFRESH_MS = 60000;
+// -------------------------------------
+
+function gvizUrl(id, tab) { return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tab)}&headers=1`; }
+async function fetchSheet(id, tab) {
+  const res = await fetch(gvizUrl(id, tab));
+  const text = await res.text();
+  const m = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?\s*$/);
+  if (!m) throw new Error('parse failure');
+  const json = JSON.parse(m[1]);
+  if (!json.table || !json.table.rows) return [];
+  return json.table.rows.map(r => (r.c || []).map(c => (c && (c.f ?? c.v)) ? String(c.f ?? c.v) : ''));
+}
+function fmtTime(iso) {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return iso || '—';
+  return d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+function isToday(iso) { const d = new Date(iso); return !isNaN(d) && d.toDateString() === new Date().toDateString(); }
+function isThisWeek(iso) { const d = new Date(iso); if (isNaN(d)) return false; const now = new Date(); const diff = (now - d) / 86400000; return diff >= 0 && diff <= 7; }
+function esc(s) { return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+let rows = [], uid = 0, searchText = '', statFilter = 'all';
+function getFiltered() {
+  const q = searchText.trim().toLowerCase();
+  let out = q ? rows.filter(r => (r[0] || '').toLowerCase().includes(q)) : rows;
+  if (statFilter === 'today') out = out.filter(r => isToday(r[4]));
+  if (statFilter === 'week') out = out.filter(r => isThisWeek(r[4]));
+  return out;
+}
+function animateNumber(el, target) {
+  target = Number(target) || 0;
+  const start = Number(el.dataset.val || 0);
+  const t0 = performance.now();
+  function step(now) {
+    const p = Math.min(1, (now - t0) / 500);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(start + (target - start) * eased);
+    if (p < 1) requestAnimationFrame(step); else el.dataset.val = target;
+  }
+  requestAnimationFrame(step);
+}
+const emptyIcon = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6 8h12M6 12h12M6 16h8"/></svg>';
+
+function render() {
+  const el = document.getElementById('panel');
+  if (!rows.length) { el.innerHTML = `<div class="empty">${emptyIcon}<strong>No quotes yet</strong>Submitted estimate requests will appear here.</div>`; return; }
+  const filtered = getFiltered();
+  if (!filtered.length) { el.innerHTML = `<div class="empty">${emptyIcon}<strong>No matches</strong>Nothing matches this filter or search.</div>`; return; }
+  el.innerHTML = filtered.slice().reverse().map((r, idx) => {
+    const [name, email, phone, estimate, sentAt] = r;
+    return `<div class="quote-card" style="animation-delay:${idx * 30}ms" onclick="openQuoteModal('${esc(phone)}','${esc(sentAt)}')">
+      <div class="card-head">
+        <div class="card-date">${fmtTime(sentAt)}</div>
+        <div class="card-name">${esc(name)}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-sub">${esc(phone)} · ${esc(email)}</div>
+        <div class="card-snip">${esc(estimate) || 'No estimate text recorded.'}</div>
+        <div class="card-tap">Read full estimate →</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.openQuoteModal = function(phone, sentAt) {
+  const quoteRow = rows.find(r => r[2] === phone && r[4] === sentAt);
+  if (!quoteRow) return;
+  const [name, email, custPhone, estimate] = quoteRow;
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'quoteModal';
+  overlay.innerHTML = `
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <h3 class="modal-title">${esc(name)}</h3>
+          <div class="modal-meta">${esc(custPhone)} · ${esc(email)} · ${fmtTime(sentAt)}</div>
+        </div>
+        <button class="modal-close" onclick="closeQuoteModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-label">Estimate sent</div>
+        <div class="modal-text">${esc(estimate) || 'No estimate text recorded.'}</div>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeQuoteModal(); });
+  document.body.appendChild(overlay);
+};
+window.closeQuoteModal = function() {
+  const el = document.getElementById('quoteModal');
+  if (el) el.remove();
+};
+function updateStats() {
+  animateNumber(document.getElementById('statTotal'), rows.length);
+  animateNumber(document.getElementById('statToday'), rows.filter(r => isToday(r[4])).length);
+  animateNumber(document.getElementById('statWeek'), rows.filter(r => isThisWeek(r[4])).length);
+}
+function renderChart() {
+  const days = [];
+  for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); days.push(d); }
+  const counts = days.map(d => rows.filter(r => { const rd = new Date(r[4]); return !isNaN(rd) && rd.toDateString() === d.toDateString(); }).length);
+  const max = Math.max(1, ...counts);
+  document.getElementById('chartBars').innerHTML = days.map((d, i) => `
+    <div class="chart-bar-col">
+      <div class="chart-count">${counts[i] || ''}</div>
+      <div class="chart-bar" style="height:${Math.max(3, (counts[i] / max) * 100)}%"></div>
+      <div class="chart-day">${d.toLocaleDateString(undefined, { weekday: 'short' })[0]}</div>
+    </div>`).join('');
+}
+function setStatus(state, text) {
+  document.getElementById('statusDot').className = 'dot' + (state === 'error' ? ' error' : '');
+  document.getElementById('statusText').textContent = text;
+}
+async function loadAll() {
+  setStatus('loading', 'Refreshing…');
+  try {
+    rows = await fetchSheet(SHEET.id, SHEET.tab);
+    updateStats(); renderChart(); render();
+    setStatus('live', 'Live · updated ' + new Date().toLocaleTimeString());
+  } catch (err) {
+    setStatus('error', 'Could not load data');
+    document.getElementById('panel').innerHTML = `<div class="error-box"><strong>Can't reach the desk.</strong><br>
+      Make sure the Google Sheet is shared as "Anyone with the link can view", and that the Sheet ID in this file is correct. Then hit Refresh.</div>`;
+  }
+}
+document.querySelectorAll('.stat').forEach(stat => {
+  stat.addEventListener('click', () => {
+    document.querySelectorAll('.stat').forEach(s => s.classList.remove('active'));
+    stat.classList.add('active');
+    statFilter = stat.dataset.filter;
+    render();
+  });
+});
+document.getElementById('refreshBtn').addEventListener('click', loadAll);
+document.getElementById('searchInput').addEventListener('input', e => { searchText = e.target.value; render(); });
+loadAll();
+setInterval(loadAll, REFRESH_MS);
+</script>
+</body>
+</html>
